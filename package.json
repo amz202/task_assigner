@@ -9,17 +9,24 @@
     "db:migrate": "tsx config/drizzle/migrate.ts"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "dotenv": "^16.5.0",
     "drizzle-orm": "^0.44.2",
     "express": "^4.21.2",
     "http-errors": "~1.6.3",
+    "jsonwebtoken": "^9.0.2",
     "morgan": "~1.9.1",
     "postgres": "^3.4.7",
     "pug": "^2.0.4"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cookie-parser": "^1.4.9",
+    "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/morgan": "^1.9.10",
     "drizzle-kit": "^0.31.2",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3"
