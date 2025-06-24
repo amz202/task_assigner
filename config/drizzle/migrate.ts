@@ -1,16 +1,28 @@
 import 'dotenv/config';
-import { drizzle } from "drizzle-orm/postgres-js"
-import { migrate } from "drizzle-orm/postgres-js/migrator"
-import postgres from "postgres"
+import { drizzle } from "drizzle-orm/node-postgres";
+import { migrate } from "drizzle-orm/node-postgres/migrator";
+import { Client } from "pg";
 
-const migrationClient = postgres(process.env.DATABASE_URL as
-    string, { max: 1 })
+// Configure PG client with Azure SSL (uses trusted public certs)
+const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: true
+    }
+});
 
 async function main() {
-    await migrate(drizzle(migrationClient), {
+    await client.connect();
+
+    await migrate(drizzle(client), {
         migrationsFolder: "./config/drizzle/migration",
-    })
-    await migrationClient.end()
+    });
+
+    await client.end();
+    console.log("✅ Migration successful");
 }
 
-main()
+main().catch((err) => {
+    console.error("❌ Migration failed:", err);
+    process.exit(1);
+});
