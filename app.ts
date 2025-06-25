@@ -6,8 +6,14 @@ import error from './middleware/error';
 import authRouter from './routes/authRoute';
 import taskRouter from './routes/taskRouter';
 import dotenv from 'dotenv';
+import cors from 'cors';
 dotenv.config();
 const app = express();
+
+app.use(cors({
+    origin: "http://192.168.162.168:3000", // Adjust the origin as needed
+    credentials: true, // Allow cookies to be sent with requests
+}));
 
 app.use(logger('dev'));
 app.use(express.json());
