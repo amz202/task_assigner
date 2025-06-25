@@ -11,7 +11,7 @@ import { is, relations } from "drizzle-orm";
 
 // Enums
 export const userRoleEnum = pgEnum("user_role", ["employee", "manager", "admin"]);
-export const taskStatusEnum = pgEnum("task_status", ["pending", "assigned", "declined", "completed"]);
+export const taskStatusEnum = pgEnum("task_status", ["pending", "assigned", "declined", "completed" , "in_progress"]); // Add more as needed
 export const taskTagEnum = pgEnum("task_tag", ["bug", "feature", "support"]); // Add more as needed
 export const taskActionEnum = pgEnum("task_action", ["created", "assigned", "declined", "accepted", "completed"]);
 
@@ -41,7 +41,7 @@ export const TaskTable = pgTable("tasks", {
 
 export const TaskLogTable = pgTable("task_logs", {
     id: serial("id").primaryKey(),
-    taskId: integer("task_id").references(() => TaskTable.id).notNull(),
+    taskId: integer("task_id").references(() => TaskTable.id,{onDelete : "cascade"}).notNull(),
     action: taskActionEnum("action").notNull(),
     performedById: integer("performed_by_id").references(() => UserTable.id).notNull(),
     message: text("message"),

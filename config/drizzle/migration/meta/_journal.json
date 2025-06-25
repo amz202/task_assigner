@@ -15,6 +15,13 @@
       "when": 1750791414299,
       "tag": "0001_smiling_nico_minoru",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1750879753354,
+      "tag": "0002_silky_redwing",
+      "breakpoints": true
     }
   ]
 }
