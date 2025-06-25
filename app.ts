@@ -3,7 +3,10 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import catchAllError from './middleware/CatchAllError';
 import error from './middleware/error';
-
+import authRouter from './routes/authRoute';
+import taskRouter from './routes/taskRouter';
+import dotenv from 'dotenv';
+dotenv.config();
 const app = express();
 
 app.use(logger('dev'));

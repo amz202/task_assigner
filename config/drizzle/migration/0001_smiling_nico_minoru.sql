@@ -1,0 +1,1 @@
+ALTER TABLE "users" ADD COLUMN "is_approved" integer DEFAULT 0 NOT NULL;

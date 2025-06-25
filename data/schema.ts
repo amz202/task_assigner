@@ -7,7 +7,7 @@ import {
     pgEnum,
     integer,
 } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
+import { is, relations } from "drizzle-orm";
 
 // Enums
 export const userRoleEnum = pgEnum("user_role", ["employee", "manager", "admin"]);
@@ -22,6 +22,7 @@ export const UserTable = pgTable("users", {
     email: varchar("email", { length: 100 }).notNull().unique(),
     passwordHash: text("password_hash").notNull(),
     role: userRoleEnum("role").notNull(),
+    isApproved: integer("is_approved").notNull().default(0), // 0: pending, 1: approved, 2: declined
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });

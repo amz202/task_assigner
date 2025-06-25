@@ -1,11 +1,18 @@
 import express, { Request, Response } from 'express';
+import bcrypt from 'bcrypt';
+import { db } from '../data/db';
+import { TaskTable, UserTable } from '../data/schema';
+import { eq  } from 'drizzle-orm';
+import { generateToken } from '../utils/generateToken';
 
 // Extend Express Request interface to include 'user'
 declare global {
     namespace Express {
         interface Request {
             user?: {
-                id: string;
+                id: number
+                role: string;
+
                 // add other user properties if needed
             }
         }
@@ -25,7 +32,7 @@ declare global {
         COMPLETED = 'completed'
     }
 
-export const createTask = (req : Request , res : Response) =>{
+export const createTask = async (req : Request , res : Response) =>{
    
     const {title , description , tag } = req.body;
 
@@ -44,16 +51,16 @@ export const createTask = (req : Request , res : Response) =>{
         return;
     }
 
-    const task = {
-        id: Date.now(),
+    const task = await db.insert(TaskTable).values({
         title,
         description,
         tag,
         status: Status.PENDING,
         createdById: req.user.id,
         assignedToId: null,
-        createdAt : new Date(),
-    };
+    });
+
+    res.status(200)
 
 
 }

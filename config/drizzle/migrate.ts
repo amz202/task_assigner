@@ -1,11 +1,12 @@
 import 'dotenv/config';
+
 import { drizzle } from "drizzle-orm/node-postgres";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
 import { Client } from "pg";
 
 // Configure PG client with Azure SSL (uses trusted public certs)
 const client = new Client({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: process.env.DATABASE_URL as string,
     ssl: {
         rejectUnauthorized: true
     }
