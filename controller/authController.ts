@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import { db } from '../data/db';
 import { UserTable } from '../data/schema';
-import { eq  } from 'drizzle-orm';
+import { and, eq , ne, or } from 'drizzle-orm';
 import { generateToken } from '../utils/generateToken';
 
 
@@ -94,7 +94,7 @@ export const login = async (req: Request, res: Response) => {
 
   // Check if user is approved
   const user = users[0];
-  if (!user.isApproved) {
+  if (!user.isApproved && user.role !== 'admin') {
     res.status(403).json({ message: 'Account not approved by admin yet.' });
     return;  
   }
@@ -147,12 +147,21 @@ catch(e){
 export const listPendingUsers = async (req: Request, res: Response) => {
 
   try{
+    console.log(req.user);
   if (!req.user || req.user.role !== 'admin') {
     res.status(403).json({ message: 'Forbidden' });
     return;
   }
-  const pending = await db.select().from(UserTable).where(eq(UserTable.isApproved, 0));
-  res.status(200).json({ users: pending });
+    const pending = await db
+      .select()
+      .from(UserTable)
+      .where(
+        and(
+          eq(UserTable.isApproved, 0),
+          ne(UserTable.role, 'admin')
+        )
+      );  
+      res.status(200).json({ users: pending });
 }
 catch(e){
   console.log("error in list pending users" , e);

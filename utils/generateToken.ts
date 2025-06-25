@@ -5,7 +5,7 @@ dotenv.config();
 
 export const generateToken = (userId :number , res:Response)=>{
 
-    const secret = process.env.JWT_SECRET;
+    const secret = process.env.JWT_SECRET ;
     if (!secret) {
         throw new Error("JWT secret is not defined in environment variables");
     }
