@@ -20,13 +20,13 @@ export const generateToken = (userId :number , res:Response)=>{
     //     sameSite : "strict" ,
     // })
 
-    if (res.req.headers.cookie) {
+    
         res.cookie("jwt", token, {
             maxAge: 7 * 24 * 60 * 60 * 1000,
             httpOnly: true,
             sameSite: "strict",
         });
-    }
+    
 
     return token;
 }

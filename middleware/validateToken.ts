@@ -12,8 +12,19 @@ export interface AuthRequest extends Request {
 
 const validateToken = async (req: AuthRequest, res: Response, next: NextFunction) => {
 
-    // const token = req.cookies?.jwt;
-    const token = req.cookies?.jwt || req.headers?.authorization?.split(' ')[1];
+       let token: string | undefined;
+
+    // Check if token is present in cookies
+    if (req.cookies?.jwt) {
+        token = req.cookies.jwt;
+    }
+    // Check if authorization header starts with Bearer
+    else if (
+        req.headers.authorization &&
+        req.headers.authorization.startsWith('Bearer ')
+    ) {
+        token = req.headers.authorization.split(' ')[1];
+    }
 
     if (!token) {
         res.status(401).json({message: 'Access token missing'});
