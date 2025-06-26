@@ -47,13 +47,14 @@ export const signup = async (req: Request, res: Response) => {
             res.status(400).json({message: 'All fields are required'});
             return;
         }
-
+        console.log("working till here")
         // Check if email already exists
         const existing = await db.select().from(UserTable).where(eq(UserTable.email, email));
         if (existing.length > 0) {
             res.status(400).json({message: 'Email already exists'});
             return;
         }
+        console.log("working till here as well")
 
         // Hash the password
         const hashedPassword = bcrypt.hashSync(password, 10);

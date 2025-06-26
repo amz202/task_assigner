@@ -22,10 +22,12 @@ export const generateToken = (userId :number , res:Response)=>{
 
     
         res.cookie("jwt", token, {
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-            httpOnly: true,
-            sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        sameSite: "lax",  // or "strict"
+        secure: false
         });
+
     
 
     return token;

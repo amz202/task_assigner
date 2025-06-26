@@ -122,10 +122,10 @@ export const updateTask = async (req: Request, res: Response) => {
     }
 };
 
-// Delete task (Employee can delete only if pending)
+// Delete task (Employee and admin can delete only if pending)
 export const deleteTask = async (req: Request, res: Response) => {
-     if (!req.user || req.user.role !== 'employee') {
-        res.status(403).json({ message: 'Only employees can delete tasks' });
+     if (!req.user || (req.user.role === 'manager' )) {
+        res.status(403).json({ message: 'Only employees and admin can delete tasks' });
         return; 
     }
 
@@ -413,14 +413,29 @@ export const getTasksForAssignment = async (req: Request, res: Response) => {
     }
 
     try {
-            const tasks = await db .select().from(TaskTable).where(
-            or(
-            eq(TaskTable.status, 'pending'),
-            eq(TaskTable.status, 'declined')
-            )
-            );
+            const tasks = await db .select().from(TaskTable);
         res.status(200).json(tasks);
     } catch (error) {
         res.status(500).json({ message: 'Failed to fetch tasks for assignment' });
     }
 };
+
+// all employees which are not approved right now
+export const getPendingEmployees = async (req: Request, res: Response) => {
+    if (!req.user || req.user.role !== 'admin') {
+        res.status(403).json({ message: 'Only admin can view pending employees' });
+        return;
+    }
+
+    try {
+        const pendingEmployees = await db.select().from(UserTable).where(
+            and(
+                eq(UserTable.isApproved, 0),
+                eq(UserTable.role, 'employee')
+            )
+        );
+        res.status(200).json(pendingEmployees);
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to fetch pending employees' });
+    }
+}
