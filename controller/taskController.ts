@@ -146,13 +146,7 @@ export const deleteTask = async (req: Request, res: Response) => {
             return; 
         }
 
-        // Log deletion
-        await db.insert(TaskLogTable).values({
-            taskId: Number(id),
-            action: 'created',
-            performedById: req.user.id,
-            message: 'Task deleted by employee',
-        });
+      
 
 
         // Delete task
