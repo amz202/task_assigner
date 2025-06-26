@@ -12,7 +12,8 @@ import {
     getAllManagers,
     getManagerTasks,
     getEmployeeTasks,
-    getTasksForAssignment
+    getTasksForAssignment,
+    getPendingEmployees
 } from '../controller/taskController';
 
 const router = express.Router();
@@ -24,6 +25,7 @@ router.delete('/delete/:id', validateToken, deleteTask);
 
 // Task workflow operations admin only
 router.post('/assign/:id', validateToken, assignTask);
+router.get('/all-employees', validateToken, getPendingEmployees);
 
 // manager only operations
 router.post('/accept/:id', validateToken, acceptTask);
@@ -37,7 +39,7 @@ router.get('/logs/:id', validateToken, getTaskLogs);
 router.get('/all-managers' , validateToken , getAllManagers);
 router.get('/manager-tasks' , validateToken , getManagerTasks);
 router.get('/employee-tasks' , validateToken , getEmployeeTasks);
-router.get('/available-tasks' , validateToken , getTasksForAssignment);
+router.get('/admin-tasks' , validateToken , getTasksForAssignment);
 
 
 export default router;

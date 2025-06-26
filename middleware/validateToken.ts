@@ -12,21 +12,11 @@ export interface AuthRequest extends Request {
 
 const validateToken = async (req: AuthRequest, res: Response, next: NextFunction) => {
 
-       let token: string | undefined;
+   const token = req.cookies.jwt || req.headers.authorization?.split(' ')[1];
 
-    // Check if token is present in cookies
-    if (req.cookies?.jwt) {
-        token = req.cookies.jwt;
-    }
-    // Check if authorization header starts with Bearer
-    else if (
-        req.headers.authorization &&
-        req.headers.authorization.startsWith('Bearer ')
-    ) {
-        token = req.headers.authorization.split(' ')[1];
-    }
-
+    console.log("Token found in cookies" , token);
     if (!token) {
+        
         res.status(401).json({message: 'Access token missing'});
         return
     }
@@ -58,13 +48,13 @@ const validateToken = async (req: AuthRequest, res: Response, next: NextFunction
         //
         //   })
 
-        if (req.cookies?.jwt) {
+    
             res.cookie("jwt", token, {
                 maxAge: 7 * 24 * 60 * 60 * 1000,
                 httpOnly: true,
                 sameSite: "strict",
             });
-        }
+        
 
         next();
     } catch (err) {

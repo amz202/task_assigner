@@ -11,8 +11,8 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-    origin: "http://192.168.162.168:3000", // Adjust the origin as needed
-    credentials: true, // Allow cookies to be sent with requests
+    origin: "http://192.168.162.168:3000", 
+    credentials: true, 
 }));
 
 app.use(logger('dev'));
