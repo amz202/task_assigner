@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { db } from '../data/db';
 import { TaskTable, UserTable, TaskLogTable, taskActionEnum, taskTagEnum, taskStatusEnum } from '../data/schema';
-import { eq, and  , or} from 'drizzle-orm';
+import {eq, and, or, desc} from 'drizzle-orm';
 
 // Extend Express Request interface to include 'user'
 declare global {
@@ -378,7 +378,7 @@ export const getManagerTasks = async (req: Request, res: Response) => {
     }
 
     try {
-        const tasks = await db.select().from(TaskTable).where(eq(TaskTable.assignedToId, req.user.id));
+        const tasks = await db.select().from(TaskTable).where(eq(TaskTable.assignedToId, req.user.id)).orderBy(desc(TaskTable.id));
         res.status(200).json(tasks);
     } catch (error) {
         res.status(500).json({ message: 'Failed to fetch manager tasks' });
@@ -392,7 +392,8 @@ export const getEmployeeTasks = async (req: Request, res: Response) => {
     }
 
     try {
-        const tasks = await db.select().from(TaskTable).where(eq(TaskTable.createdById, req.user.id));
+        const tasks = await db.select().from(TaskTable).where(eq(TaskTable.createdById, req.user.id)).orderBy(desc(TaskTable.id));
+        console.log(tasks);
         res.status(200).json(tasks);
     } catch (error) {
         res.status(500).json({ message: 'Failed to fetch employee tasks' });
@@ -406,7 +407,7 @@ export const getTasksForAssignment = async (req: Request, res: Response) => {
     }
 
     try {
-            const tasks = await db .select().from(TaskTable);
+            const tasks = await db .select().from(TaskTable).orderBy(desc(TaskTable.id));
         res.status(200).json(tasks);
     } catch (error) {
         res.status(500).json({ message: 'Failed to fetch tasks for assignment' });
