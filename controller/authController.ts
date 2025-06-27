@@ -210,3 +210,28 @@ export const checkAuth = (req: Request, res: Response) => {
         res.status(500).json({message: "internal server error"})
     }
 }
+
+export const rejectUser = async (req: Request, res: Response) => {
+    try {
+        if (!req.user || req.user.role !== 'admin') {
+            res.status(403).json({ message: 'Forbidden' });
+            return;
+        }
+
+        const { id } = req.params;
+        const updated = await db
+            .delete(UserTable)
+            .where(eq(UserTable.id, Number(id)))
+            .returning();
+
+        if (updated.length === 0) {
+            res.status(404).json({ message: 'User not found' });
+            return;
+        }
+
+        res.status(200).json({ message: 'User rejected', user: updated[0] });
+    } catch (e) {
+        console.error("Error in rejecting user: ", e);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};

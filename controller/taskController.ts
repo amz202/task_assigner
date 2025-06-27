@@ -124,39 +124,32 @@ export const updateTask = async (req: Request, res: Response) => {
 
 // Delete task (Employee and admin can delete only if pending)
 export const deleteTask = async (req: Request, res: Response) => {
-     if (!req.user || (req.user.role === 'manager' )) {
+    if (!req.user || (req.user.role !== 'employee' && req.user.role !== 'admin')) {
         res.status(403).json({ message: 'Only employees and admin can delete tasks' });
-        return; 
+        return;
     }
 
     const { id } = req.params;
 
     try {
-        // Get current task
         const [task] = await db.select().from(TaskTable).where(eq(TaskTable.id, Number(id)));
-        
+
         if (!task) {
             res.status(404).json({ message: 'Task not found' });
-            return; 
+            return;
         }
 
-        // Only creator can delete if task is pending
-        if (task.createdById !== req.user.id || task.status !== 'pending') {
+        if (
+            task.status !== 'pending' ||
+            (req.user.role === 'employee' && task.createdById !== req.user.id)
+        ) {
             res.status(403).json({ message: 'Cannot delete this task' });
-            return; 
+            return;
         }
 
-      
-
-
-        // Delete task
         await db.delete(TaskTable).where(eq(TaskTable.id, Number(id)));
-
-        
-
         res.status(200).json({ message: 'Task deleted successfully' });
     } catch (error) {
-        console.log(error);
         res.status(500).json({ message: 'Failed to delete task' });
     }
 };
@@ -323,7 +316,7 @@ export const completeTask = async (req: Request, res: Response) => {
         }
 
         // Verify task is accepted by this manager
-        if (task.assignedToId !== req.user.id || task.status !== 'assigned') {
+        if (task.assignedToId !== req.user.id || task.status !== 'in_progress') {
             res.status(403).json({ message: 'Cannot complete this task' });
         return;            
         }

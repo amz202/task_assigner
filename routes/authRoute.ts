@@ -1,6 +1,6 @@
 import express , {Request , Response}  from 'express';
 import validateToken from '../middleware/validateToken';
-import { signup , login , logout , checkAuth, approveUser, listPendingUsers } from '../controller/authController';
+import { signup , login , logout , checkAuth, approveUser, listPendingUsers , rejectUser} from '../controller/authController';
 
 
 const router = express.Router();
@@ -23,6 +23,6 @@ router.get('/pending-users', validateToken, listPendingUsers);
 
 router.post('/approve/:id', validateToken, approveUser);
 
-
+router.post('/reject/:id' , validateToken ,rejectUser)
 
 export default router;
