@@ -25,7 +25,7 @@ export const generateToken = (userId :number , res:Response)=>{
         maxAge: 7 * 24 * 60 * 60 * 1000,
         httpOnly: true,
         sameSite: "lax",  // or "strict"
-        secure: true
+        secure: false
         });
 
     

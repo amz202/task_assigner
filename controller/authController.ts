@@ -13,6 +13,7 @@ declare global {
             user?: {
                 id: number;
                 role: string;
+                name : string
             }
         }
     }
@@ -179,19 +180,27 @@ export const listPendingUsers = async (req: Request, res: Response) => {
 
 
 export const logout = (req: Request, res: Response) => {
-    // Clear the JWT cookie
     try {
         res.clearCookie('jwt', {
             httpOnly: true,
             sameSite: 'strict',
+            secure: process.env.NODE_ENV === 'production', // Add secure flag in production
+            path: '/' // Ensure cookie is cleared for all paths
         });
 
-        res.status(200).json({message: 'Logout successful'});
+        // Clear Authorization header by setting an empty token
+        res.setHeader('Authorization', '');
+
+        res.status(200).json({
+            message: 'Logout successful',
+            token: null // Explicitly return null token for client-side clearing
+        });
     } catch (e) {
         console.log("error in logging out ", e);
-        res.status(500).json({message: "Internal server Error"})
+        res.status(500).json({ message: "Internal Server Error" })
     }
 }
+
 
 export const checkAuth = (req: Request, res: Response) => {
     // Check if the user is authenticated by checking the JWT cookie

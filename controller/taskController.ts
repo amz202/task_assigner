@@ -10,6 +10,7 @@ declare global {
             user?: {
                 id: number;
                 role: string;
+                name : string
             }
         }
     }
@@ -62,7 +63,7 @@ export const createTask = async (req: Request, res: Response) => {
             taskId: task.id,
             action: 'created',
             performedById: req.user.id,
-            message: 'Task created by employee',
+            message: `Task created by employee ${req.user.name}`,
         });
 
         res.status(201).json(task);
@@ -113,7 +114,7 @@ export const updateTask = async (req: Request, res: Response) => {
             taskId: Number(id),
             action: 'created',
             performedById: req.user.id,
-            message: 'Task updated by employee',
+            message: `Task updated by employee ${req.user.name}`,
         });
 
         res.status(200).json(updated);
@@ -193,7 +194,7 @@ export const assignTask = async (req: Request, res: Response) => {
             taskId: Number(id),
             action: 'assigned',
             performedById: req.user.id,
-            message: `Task assigned to manager ${managerId}`,
+            message: `Task assigned to manager: ${managerId} `,
         });
 
         res.status(200).json(updated);
@@ -240,7 +241,7 @@ export const acceptTask = async (req: Request, res: Response) => {
             taskId: Number(id),
             action: 'accepted',
             performedById: req.user.id,
-            message: 'Task accepted by manager',
+            message: `Task accepted by manager : ${task.assignedToId}`,
         });
 
         res.status(200).json(updated);
@@ -288,7 +289,7 @@ export const declineTask = async (req: Request, res: Response) => {
             taskId: Number(id),
             action: 'declined',
             performedById: req.user.id,
-            message: 'Task declined by manager',
+            message: `Task declined by manager : ${req.user.id}`,
         });
 
         res.status(200).json(updated);
@@ -335,7 +336,7 @@ export const completeTask = async (req: Request, res: Response) => {
             taskId: Number(id),
             action: 'completed',
             performedById: req.user.id,
-            message: 'Task completed by manager',
+            message: `Task completed by manager : ${req.user.id}`,
         });
 
         res.status(200).json(updated);
